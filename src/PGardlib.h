@@ -1,53 +1,41 @@
-#include <stdint.h> 
+#pragma once
 
+/*
+ * Includes 
+ */
+
+//#include <string.h>
+#include <Arduino.h>
+//#include <stdlib.h>
+//#include <stdint.h> 
+
+#ifdef BLUETOOTH
+#include "bluetooth.h"
+#endif // BLUETOOTH
+
+#ifdef MATRIX
+#include "matrix.h"
+#endif // MATRIX
+
+/*
+ * Structures & Variables 
+ */
 #define SP(x) Serial.print(x)
 #define SPL(x) Serial.println(x)
 
-typedef struct animation {
-  uint8_t id;
-  uint8_t frame;
-  uint8_t total_frames;
-  uint8_t speed;
-  uint32_t time;
-  struct animation *next;
-  struct animation *prev;
-  uint8_t commands;
-  uint16_t (*data)[64];
-} animation_t;
+/*
+ * Functions
+ */
+void PGardLibSetup(void);
+void PGardLibSetup(uint32_t baud);
+void arrayFill(char value, char *target, uint16_t size);
+bool arrayCompare(char *needle, char *haystack, uint8_t size);
+void arrayCopy(char *source, char *dest, uint8_t size);
+void arrayPush(char value, char *target, uint16_t size);
+void display_scrollText(char* text, int16_t speed, uint32_t color);
+void display_scrollText(String text, int16_t speed, uint32_t color);
+void display_scrollText(float text, int16_t speed, uint32_t color);
 
-#define BLACK   0
-
-#define RED1    (3 <<  11)
-#define RED2    (7 <<  11)
-#define RED3    (15 << 11)
-#define RED4    (31 << 11)
-
-#define GREEN1  (1 <<  5)   
-#define GREEN2  (15 << 5)  
-#define GREEN3  (31 << 5)  
-#define GREEN4  (63 << 5)  
-
-#define BLUE1   3
-#define BLUE2   7
-#define BLUE3   15
-#define BLUE4   31
-
-#define YELLOW1 (RED1 + GREEN1)
-#define YELLOW2 (RED2 + GREEN2)
-#define YELLOW3 (RED3 + GREEN3)
-#define YELLOW4 (RED4 + GREEN4)
-
-#define PURPLE1 (RED1 + BLUE1)
-#define PURPLE2 (RED2 + BLUE2)
-#define PURPLE3 (RED3 + BLUE3)
-#define PURPLE4 (RED4 + BLUE4)
-
-#define CYAN1   (GREEN1 + BLUE1)
-#define CYAN2   (GREEN2 + BLUE2)
-#define CYAN3   (GREEN3 + BLUE3)
-#define CYAN4   (GREEN4 + BLUE4)
-
-#define WHITE1  (RED1 + GREEN1 + BLUE1)
-#define WHITE2  (RED2 + GREEN2 + BLUE2)
-#define WHITE3  (RED3 + GREEN3 + BLUE3)
-#define WHITE4  (RED4 + GREEN4 + BLUE4)
+#ifdef MATRIX
+Adafruit_NeoMatrix *matrix = new Adafruit_NeoMatrix(MATRIX_W, MATRIX_H, MATRIX, MATRIX_OPTIONS, NEO_GRB + NEO_KHZ800 );
+#endif //MATRIX

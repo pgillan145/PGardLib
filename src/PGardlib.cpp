@@ -1,5 +1,15 @@
 #include "PGardlib.h"
 
+void PGardLibSetup() {
+    PGardLibSetup(9600);
+}
+
+void PGardLibSetup(uint32_t baud) {
+    delay(1000);
+    Serial.begin(baud);
+    SPL("setup()");
+}
+
 void arrayFill(char value, char *target, uint16_t size) {
   for (uint16_t i = 0; i<size; i++) {
     target[i] = value;
@@ -28,3 +38,4 @@ void arrayPush(char value, char *target, uint16_t size) {
   }
   target[size-1] = value;
 }
+
