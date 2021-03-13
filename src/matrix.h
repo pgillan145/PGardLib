@@ -48,11 +48,15 @@
 #define WHITE3  (RED3 + GREEN3 + BLUE3)
 #define WHITE4  (RED4 + GREEN4 + BLUE4)
 
+#ifdef MASK
+#define MATRIX_OPTIONS NEO_MATRIX_TOP  + NEO_MATRIX_LEFT + NEO_MATRIX_ROWS + NEO_MATRIX_ZIGZAG
+#else // NOT MASK
 #ifdef RIGID
 #define MATRIX_OPTIONS NEO_MATRIX_BOTTOM  + NEO_MATRIX_RIGHT + NEO_MATRIX_ROWS + NEO_MATRIX_PROGRESSIVE
-#else
+#else // NOT RIGID
 #define MATRIX_OPTIONS NEO_MATRIX_TOP  + NEO_MATRIX_LEFT + NEO_MATRIX_COLUMNS + NEO_MATRIX_ZIGZAG
 #endif // RIGID
+#endif // MASK
 
 // animation commands:
 // 1   hold for 1 seconds before going black
@@ -83,7 +87,7 @@ typedef struct animation {
   struct animation *next;
   struct animation *prev;
   uint8_t commands;
-  uint16_t (*data)[64];
+  uint16_t (*data)[90];
 } animation_t;
 
 /*
@@ -115,8 +119,9 @@ extern Adafruit_NeoMatrix *matrix;
 void display_scrollText(char* text, int16_t speed, uint32_t color);
 void display_scrollText(String text, int16_t speed, uint32_t color);
 void display_scrollText(float text, int16_t speed, uint32_t color);
-void addAnimation(uint16_t ani[][64], uint8_t frames, uint8_t speed, uint8_t commands);
+void addAnimation(uint16_t ani[][90], uint8_t frames, uint8_t speed, uint8_t commands);
 void doAnimations(void);
-animation_t *findAnimation(uint16_t ani[][64]);
+
+animation_t *findAnimation(uint16_t ani[][90]);
 
 

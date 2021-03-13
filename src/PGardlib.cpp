@@ -7,6 +7,7 @@ void PGardLibSetup() {
 void PGardLibSetup(uint32_t baud) {
     delay(1000);
     Serial.begin(baud);
+    delay(1000);
     SPL("setup()");
 }
 
@@ -39,3 +40,36 @@ void arrayPush(char value, char *target, uint16_t size) {
   target[size-1] = value;
 }
 
+#ifdef __arm__
+// should use uinstd.h to define sbrk but Due causes a conflict
+extern "C" char* sbrk(int incr);
+#else  // __ARM__
+extern char *__brkval;
+#endif  // __arm__
+
+uint16_t freeMemory() {
+  char top;
+#ifdef __arm__
+  return &top - reinterpret_cast<char*>(sbrk(0));
+#elif defined(CORE_TEENSY) || (ARDUINO > 103 && ARDUINO != 151)
+  return &top - __brkval;
+#else  // __arm__
+  return __brkval ? &top - __brkval : &top - __malloc_heap_start;
+#endif  // __arm__
+}
+
+String serialInput(uint8_t max_length) {
+  String stringText = "";
+  if (Serial.available()) {
+    delay(10);
+    while(Serial.available()) {
+      char c = Serial.read();
+      stringText += c;
+      if(stringText.length() >= max_length) {
+        break; 
+      }
+    }
+    Serial.flush();
+  }
+  return stringText;
+}

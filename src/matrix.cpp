@@ -2,16 +2,14 @@
 
 animation_t *animations = NULL;
 
-uint16_t black[][64] = {
+uint16_t black[][90] = {
   {
-    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000
+    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000
   },
 };
 
@@ -84,7 +82,7 @@ void display_scrollText(float text, int16_t speed, uint32_t color) {
 }
 
 // Animations
-animation_t *findAnimation(uint16_t ani[][64]) {
+animation_t *findAnimation(uint16_t ani[][90]) {
   animation_t *a = animations;
   while (a) {
     if (a->data == &ani[0]) {
@@ -95,7 +93,7 @@ animation_t *findAnimation(uint16_t ani[][64]) {
   return 0;
 }
 
-void addAnimation(uint16_t ani[][64], uint8_t frames, uint8_t speed, uint8_t commands) {
+void addAnimation(uint16_t ani[][90], uint8_t frames, uint8_t speed, uint8_t commands) {
   /*
   for (uint8_t i = 0; i<frames; i++) {
     Serial.print("frame ");
@@ -147,28 +145,24 @@ void doAnimations() {
   while (a) {
     uint32_t now = millis();
 
-#ifdef CEREAL
     Serial.print(" animation ");
     Serial.print(a->id);
     Serial.print(" frame ");
     Serial.println(a->frame);
-#endif
-    matrix->drawRGBBitmap(0,0,a->data[a->frame],8,8);
-    matrix->show();
+
     if (now >= a->time) {
       a->frame++;
       a->time = now + (1000/a->speed);
     }
-
-    uint8_t total_frames = a->total_frames;
-    if (a->frame >= total_frames) {
+    animation *next = a->next;
+    if (a->frame >= a->total_frames) {
       if (a->commands & ANI_HOLD) {
         // hold for 1 second
-        a->frame = 0;
-        a->data = &black[0];
-        a->total_frames = 1;
+        // repeat the last frame
         a->time = now + 1000;
-        a->commands &= ~(1 << 0);
+        a->frame = a->total_frames - 1;
+        // clear the hold command
+        a->commands &= ~(ANI_HOLD);
       }
       else if (a->commands & ANI_REPEAT) {
         // repeat
@@ -192,9 +186,13 @@ void doAnimations() {
           animations = NULL;
         }
         free(a);
+        matrix->drawRGBBitmap(0,0,black[0],15,6);
       }
+    } else {
+        matrix->drawRGBBitmap(0,0,a->data[a->frame],15,6);
+        matrix->show();
     }
-    a = a->next;
+    a = next;
   }
 }
 
