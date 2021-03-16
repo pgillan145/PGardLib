@@ -5,7 +5,12 @@
  */
 
 #include <Arduino.h>
+#ifdef RFDUINO
+#include <RFduinoBLE.h>
+RFduinoBLEClass BLE = RFduinoBLE;
+#else
 #include <ArduinoBLE.h>
+#endif
 
 /*
  * Functions

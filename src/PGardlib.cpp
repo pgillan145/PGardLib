@@ -58,6 +58,10 @@ uint16_t freeMemory() {
 #endif  // __arm__
 }
 
+String serialInput() {
+    return serialInput(10);
+}
+
 String serialInput(uint8_t max_length) {
   String stringText = "";
   if (Serial.available()) {

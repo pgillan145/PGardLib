@@ -35,6 +35,7 @@ void arrayCopy(char *source, char *dest, uint8_t size);
 void arrayPush(char value, char *target, uint16_t size);
 uint16_t freeMemory(void);
 String serialInput(uint8_t max_length);
+String serialInput(void);
 
 #ifdef MATRIX
 Adafruit_NeoMatrix *matrix = new Adafruit_NeoMatrix(MATRIX_W, MATRIX_H, MATRIX, MATRIX_OPTIONS, NEO_GRB + NEO_KHZ800 );
