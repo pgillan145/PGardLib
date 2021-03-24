@@ -1,5 +1,22 @@
 #include "bluetooth.h"
 
+void arrayUnshift(BLEDevice value, BLEDevice *target, uint16_t size) {
+  for (uint16_t i = size-1; i>0; i--) {
+    target[i] = target[i-1];
+  }
+  target[0] = value;
+}
+
+BLEDevice arrayShift(BLEDevice *target, uint16_t size) {
+  BLEDevice b = target[0];
+
+  for (uint16_t i = 0; i<size-1; i++) {
+    target[i] = target[i+1];
+  }
+  //target[size-1] = NULL;
+  return b;
+}
+
 void bleConn(BLEDevice peripheral) {
   if (peripheral.connect()) {
     Serial.println("Connected");

@@ -6,11 +6,19 @@ void PGardLibSetup() {
 
 void PGardLibSetup(uint32_t baud) {
     delay(1000);
+#ifdef CEREAL
     Serial.begin(baud);
+#endif
     delay(1000);
     SPL("setup()");
+    pinMode(LED_BUILTIN, INPUT);
 }
 
+void arrayFill(uint32_t value, volatile uint32_t *target, uint16_t size) {
+  for (uint16_t i = 0; i<size; i++) {
+    target[i] = value;
+  }
+}
 void arrayFill(char value, char *target, uint16_t size) {
   for (uint16_t i = 0; i<size; i++) {
     target[i] = value;
@@ -38,6 +46,16 @@ void arrayPush(char value, char *target, uint16_t size) {
     target[i-1] = target[i];
   }
   target[size-1] = value;
+}
+
+char arrayPop(char *target, uint16_t size) {
+  char c = target[size-1];
+
+  for (uint16_t i = size-1; i>0; i--) {
+    target[i] = target[i-1];
+  }
+  target[0] = 0;
+  return c;
 }
 
 #ifdef __arm__
@@ -76,4 +94,13 @@ String serialInput(uint8_t max_length) {
     Serial.flush();
   }
   return stringText;
+}
+
+void errorBlink() {
+  while(1) {
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(500);
+    digitalWrite(LED_BUILTIN, LOW);
+    delay(500);
+  }
 }

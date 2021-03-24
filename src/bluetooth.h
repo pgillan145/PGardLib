@@ -17,4 +17,6 @@ RFduinoBLEClass BLE = RFduinoBLE;
  */
 void bleConn(BLEDevice peripheral);
 void getBLEValue(BLEDevice peripheral, char *buf, uint8_t size);
+BLEDevice arrayShift(BLEDevice *target, uint16_t size);
+void arrayUnshift(BLEDevice value, BLEDevice *target, uint16_t size);
 
