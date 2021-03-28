@@ -108,7 +108,7 @@ void addAnimation(uint16_t ani[][90], uint8_t frames, uint8_t speed, uint8_t com
   if (commands & 4) {
     animation_t *a = findAnimation(ani);
     if (a) {
-      Serial.println("FOUND MATCHING ANIMATION");
+      //Serial.println("FOUND MATCHING ANIMATION");
       a->commands &= ~(1 << 2);
       return;
     }
@@ -145,10 +145,10 @@ void doAnimations() {
   while (a) {
     uint32_t now = millis();
 
-    Serial.print(" animation ");
-    Serial.print(a->id);
-    Serial.print(" frame ");
-    Serial.println(a->frame);
+    //Serial.print(" animation ");
+    //Serial.print(a->id);
+    //Serial.print(" frame ");
+    //Serial.println(a->frame);
 
     if (now >= a->time) {
       a->frame++;
@@ -190,8 +190,8 @@ void doAnimations() {
       }
     } else {
         matrix->drawRGBBitmap(0,0,a->data[a->frame],15,6);
-        matrix->show();
     }
+    matrix->show();
     a = next;
   }
 }

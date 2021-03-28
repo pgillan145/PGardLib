@@ -11,10 +11,21 @@ void PGardLibSetup(uint32_t baud) {
 #endif
     delay(1000);
     SPL("setup()");
-    pinMode(LED_BUILTIN, INPUT);
+    pinMode(LED_BUILTIN, OUTPUT);
+#ifdef OLED
+  if(!display.begin(SSD1306_SWITCHCAPVCC, OLED)) {
+    SPL(F("SSD1306 allocation failed"));
+    errorBlink();  
+  }
+#endif
 }
 
 void arrayFill(uint32_t value, volatile uint32_t *target, uint16_t size) {
+  for (uint16_t i = 0; i<size; i++) {
+    target[i] = value;
+  }
+}
+void arrayFill(String value, String *target, uint16_t size) {
   for (uint16_t i = 0; i<size; i++) {
     target[i] = value;
   }

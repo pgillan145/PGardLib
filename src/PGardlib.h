@@ -35,6 +35,7 @@
  */
 void PGardLibSetup(void);
 void PGardLibSetup(uint32_t baud);
+void arrayFill(String value, String *target, uint16_t size);
 void arrayFill(uint32_t value, volatile uint32_t *target, uint16_t size);
 void arrayFill(char value, char *target, uint16_t size);
 bool arrayCompare(char *needle, char *haystack, uint8_t size);
