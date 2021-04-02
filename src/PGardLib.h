@@ -7,10 +7,6 @@
 #include <Arduino.h>
 #include <functional>
 
-#ifdef BLUETOOTH
-#include "bluetooth.h"
-#endif // BLUETOOTH
-
 #ifdef MATRIX
 #include "matrix.h"
 #endif // MATRIX
@@ -22,12 +18,17 @@
 /*
  * Structures & Variables 
  */
+
 #ifdef CEREAL
 #define SP(x) Serial.print(x)
 #define SPL(x) Serial.println(x)
 #else
 #define SP(x) {}
 #define SPL(x) {}
+#endif
+
+#ifdef ESP32
+#define LED_BUILTIN     2
 #endif
 
 /*

@@ -6,15 +6,13 @@ void PGardLibSetup() {
 
 void PGardLibSetup(uint32_t baud) {
     delay(1000);
-#ifdef CEREAL
     Serial.begin(baud);
-#endif
     delay(1000);
     SPL("setup()");
     pinMode(LED_BUILTIN, OUTPUT);
 #ifdef OLED
   if(!display.begin(SSD1306_SWITCHCAPVCC, OLED)) {
-    SPL(F("SSD1306 allocation failed"));
+    SPL("SSD1306 allocation failed");
     errorBlink();  
   }
 #endif
@@ -50,7 +48,6 @@ void arrayCopy(char *source, char *dest, uint8_t size) {
     dest[i] = source[i];
   }
 }
-
 
 void arrayPush(char value, char *target, uint16_t size) {
   for (uint16_t i = 1; i<size; i++) {
